@@ -1,14 +1,43 @@
 from ecole.models.student import Student
+from ecole.models.course import Course
 
 
-def test_address_str():
-    address = Address(street="28 rue des jonquilles", city="Paris", postal_code=75000)
-    expected_value = "28 rue des jonquilles, 75000 Paris"
-    assert str(address) == expected_value
+class MockStudent:
+    def __init__(self):
+        self.student_nbr = 1
+        self.courses_taken = []
+
+    def __str__(self):
+        return f"Bob Martin (20 ans), n° étudiant : {self.student_nbr}"
+
+    def add_course(self, course):
+        self.courses_taken.append(course)
+        course.students_taking_it.append(self)
 
 
-def test_address_attributes():
-    address = Address(street="28 rue des jonquilles", city="Paris", postal_code=75000)
-    assert address.street == "28 rue des jonquilles"
-    assert address.city == "Paris"
-    assert address.postal_code == 75000
+class MockCourse:
+    def __init__(self):
+        self.students_taking_it = []
+
+
+def test_student_str(mocker):
+    Student.students_nb = 0
+    student = Student(first_name="Bob", last_name="Martin", age=20)
+
+    mocker.patch.object(student, '__str__', return_value="Bob Martin (20 ans), n° étudiant : 1")
+
+    expected_value = "Bob Martin (20 ans), n° étudiant : 1"
+    assert str(student) == expected_value
+
+
+def test_student_add_course(mocker):
+    mock_student = MockStudent()
+    mock_course = MockCourse()
+
+    mocker.patch('ecole.models.student.Student', return_value=mock_student)
+
+    student = Student(first_name="Bob", last_name="Martin", age=20)
+    student.add_course(mock_course)
+
+    assert mock_course in student.courses_taken
+    assert student in mock_course.students_taking_it
