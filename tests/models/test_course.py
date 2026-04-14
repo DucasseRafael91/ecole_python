@@ -3,6 +3,10 @@ from ecole.models.course import Course
 from ecole.models.student import Student
 from ecole.models.teacher import Teacher
 
+class MockCourse:
+    def __str__(self):
+        return "28 rue des jonquilles, 75000 Paris"
+
 
 def test_set_teacher(mocker):
     course = Course(name="Maths", start_date=date(2024, 1, 28), end_date=date(2024, 1, 30))
