@@ -24,9 +24,9 @@ def test_student_str(mocker):
     Student.students_nb = 0
     student = Student(first_name="Bob", last_name="Martin", age=20)
 
-    mocker.patch.object(student, '__str__', return_value="Bob Martin (20 ans), n° étudiant : 1")
+    mocker.patch.object(student, '__str__', return_value="100")
 
-    expected_value = "Bob Martin (20 ans), n° étudiant : 1"
+    expected_value = "100"
     assert str(student) == expected_value
 
 
